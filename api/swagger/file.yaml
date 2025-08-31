@@ -1,0 +1,256 @@
+swagger: "2.0"
+info:
+  title: Сервис otusbill
+  version: 1.0.0
+  description: API сервиса otusbill
+
+schemes:
+  - http
+  - https
+
+basePath: /api
+
+tags:
+  - name: User CRUD
+    description: Создание, изменение, удаление пользователя 
+  - name: Balance
+    description: Информация по балансу 
+  - name: Other
+    description: Прочие эндпоинты
+
+paths:
+  /user-balance/{guid}:
+    get:
+      summary: Получение информации по балансу пользователя
+      tags:
+        - Balance
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: path
+          name: guid
+          description: guid пользователя
+          required: true
+          type: string
+          format: uuid
+          x-omitempty: false
+          x-nullable: false
+      responses:
+        500:
+          description: Серверная ошибка
+          schema:
+            $ref: '#/definitions/Error'
+        400:
+          description: Клиентская ошибка
+          schema:
+            $ref: '#/definitions/Error'
+        200:
+          description: Успешное получение данных по балансу
+          schema:
+            $ref: '#/definitions/UserBalance'
+  /user-balance/increase:
+    post:
+      summary: Пополнение баланса пользователя
+      tags:
+        - Balance
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: request
+          description: Параметры пополнения баланса
+          required: true
+          schema:
+            $ref: '#/definitions/BalanceIncreaseParams'
+      responses:
+        500:
+          description: Серверная ошибка
+          schema:
+            $ref: '#/definitions/DefaultStatusResponse'
+        200:
+          description: Успешное создание пользователя
+          schema:
+            $ref: '#/definitions/DefaultStatusResponse'
+  /user-balance/reduce:
+    post:
+      summary: Списание с баланса пользователя
+      tags:
+        - Balance
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: request
+          description: Параметры списания баланса
+          required: true
+          schema:
+            $ref: '#/definitions/BalanceReduceParams'
+      responses:
+        500:
+          description: Серверная ошибка
+          schema:
+            $ref: '#/definitions/DefaultStatusResponse'
+        200:
+          description: Успешное создание пользователя
+          schema:
+            $ref: '#/definitions/DefaultStatusResponse'
+  /user:
+    post:
+      summary: Создание пользователя
+      tags:
+        - User CRUD
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: request
+          description: Параметры создания пользователя
+          required: true
+          schema:
+            $ref: '#/definitions/UserCreateParams'
+      responses:
+        500:
+          description: Серверная ошибка
+          schema:
+            $ref: '#/definitions/DefaultStatusResponse'
+        400:
+          description: Клиентская ошибка
+          schema:
+            $ref: '#/definitions/DefaultStatusResponse'
+        200:
+          description: Успешное создание пользователя
+          schema:
+            $ref: '#/definitions/DefaultStatusResponse'
+  /health:
+    get:
+      summary: Пинг сервиса
+      tags:
+        - Other
+      responses:
+        '200':
+          description: Успех
+          schema:
+            $ref: '#/definitions/DefaultStatusResponse'
+        '500':
+          description: Серверная ошибка
+          schema:
+            $ref: '#/definitions/Error'
+definitions:
+  UserCreateParams:
+    type: object
+    description: Параметры создания пользователя
+    required:
+      - guid
+    properties:
+      guid: 
+        type: string
+        format: uuid
+        description: 'Имя пользователя'
+        example: "Дроздобород Эдуард"
+        x-omitempty: false
+        x-nullable: false
+  BalanceIncreaseParams:
+    type: object
+    description: Пополнение баланса
+    required:
+      - user_guid
+      - operation_ref
+      - amount
+    properties:
+      user_guid:
+        type: string
+        format: uuid
+        x-omitempty: false
+        x-nullable: false
+      operation_ref:
+        type: string
+        description: 'Описания операции'
+        example: "Заказ №123"
+        x-omitempty: false
+        x-nullable: false
+      amount:
+        type: number
+        format: double
+        minimum: 0.01
+        x-omitempty: false
+        x-nullable: false
+  BalanceReduceParams:
+    type: object
+    description: Списание с баланса
+    required:
+      - user_guid
+      - operation_ref
+      - amount
+    properties:
+      user_guid:
+        type: string
+        format: uuid
+        x-omitempty: false
+        x-nullable: false
+      operation_ref:
+        type: string
+        description: 'Описания операции'
+        example: "Заказ №123"
+        x-omitempty: false
+        x-nullable: false
+      amount:
+        type: number
+        format: double
+        minimum: 0.01
+        x-omitempty: false
+        x-nullable: false
+  UserBalance:
+    type: object
+    description: Текущий баланс пользователя
+    properties:
+      guid:
+        type: string
+        format: uuid
+        x-omitempty: false
+        x-nullable: false
+      amount:
+        type: number
+        format: double
+        x-omitempty: false
+        x-nullable: false
+  DefaultStatusResponse:
+    type: object
+    description: Дефолтный положительный ответ
+    required:
+      - message
+      - code
+    properties:
+      code:
+        type: string
+        description: 'Кодовое обозначение ответа'
+        example: "01"
+        x-omitempty: false
+        x-nullable: false
+      message:
+        type: string
+        description: 'Сообщение'
+        example: "Сообщение об успешном выполнении запроса"
+        x-omitempty: false
+        x-nullable: false
+  Error:
+    type: object
+    description: объект ошибки, обязательным является лишь поле сообщения, опционально присутствует код и ряд других полей
+    required:
+      - message
+    properties:
+      message:
+        type: string
+        description: текстовое описание ошибки
+        example: "произошла такая-то ошибка"
+      code:
+        type: integer
+        description: цифровой код ошибки
+        example: 123

@@ -1,0 +1,17 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: bill-ingress
+spec:
+  ingressClassName: nginx
+  rules:
+  - host: bill.internal
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: bill-service-lb
+            port:
+              number: 80
