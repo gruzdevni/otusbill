@@ -10,6 +10,7 @@ import (
 	"github.com/google/uuid"
 	"github.com/shopspring/decimal"
 
+	"otusbill/apperr"
 	"otusbill/internal/models"
 	query "otusbill/internal/repo"
 )
@@ -82,6 +83,20 @@ func (s *service) ReduceBalance(ctx context.Context, param models.BalanceReduceP
 		UserGuid:     userGuid,
 		OperationRef: param.OperationRef,
 		Amount:       decimal.NewFromFloat(param.Amount).Neg(),
+	}
+
+	currentBalance, err := s.repo.GetUserBalance(ctx, userGuid)
+	if err != nil {
+		if errors.Is(err, sql.ErrNoRows) {
+			return apperr.NotEnoughMoney
+		}
+
+		return fmt.Errorf("getting user balance: %w", err)
+	}
+
+	if decimal.NewFromFloat(currentBalance.Column2).
+		LessThan(decimal.NewFromFloat(param.Amount)) {
+		return apperr.NotEnoughMoney
 	}
 
 	err = s.repo.ChangeBalance(ctx, queryParam)

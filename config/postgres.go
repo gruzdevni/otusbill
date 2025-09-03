@@ -5,8 +5,8 @@ import "time"
 type Postgres struct {
 	DsnHost     string `envconfig:"POSTGRES_HOST" default:"localhost"`
 	DsnPort     string `envconfig:"POSTGRES_PORT" default:"5432"`
-	DsnDBName   string `envconfig:"POSTGRES_DB_NAME" default:"test"`
-	DsnUser     string `envconfig:"POSTGRES_USER" default:"root"`
+	DsnDBName   string `envconfig:"POSTGRES_DB_NAME" default:"postgres"`
+	DsnUser     string `envconfig:"POSTGRES_USER" default:"postgres"`
 	DsnPassword string `envconfig:"POSTGRES_PASSWORD" default:""`
 
 	MaxOpenConns    int           `envconfig:"POSTGRES_MAX_OPEN_CONNS" default:"10"`

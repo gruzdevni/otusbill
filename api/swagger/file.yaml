@@ -96,8 +96,12 @@ paths:
           description: Серверная ошибка
           schema:
             $ref: '#/definitions/DefaultStatusResponse'
+        403:
+          description: Клиентская ошибка
+          schema:
+            $ref: '#/definitions/DefaultStatusResponse'
         200:
-          description: Успешное создание пользователя
+          description: Успешное выполнение операции
           schema:
             $ref: '#/definitions/DefaultStatusResponse'
   /user:

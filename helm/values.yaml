@@ -2,7 +2,7 @@ billDp:
   billApp:
     image:
       repository: nikolaygr/otusbill
-      tag: v0.1
+      tag: v0.2
   replicas: 2
   strategy:
     rollingUpdate:
@@ -26,4 +26,4 @@ migratePostgres:
   migratePostgres:
     image:
       repository: nikolaygr/otusbill
-      tag: v0.1
+      tag: v0.2

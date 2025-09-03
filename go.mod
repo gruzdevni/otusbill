@@ -19,7 +19,6 @@ require (
 	github.com/pkg/errors v0.9.1
 	github.com/prometheus/client_golang v1.23.0
 	github.com/rs/zerolog v1.34.0
-	github.com/samber/lo v1.51.0
 	github.com/shopspring/decimal v1.2.0
 	github.com/spf13/cobra v1.9.1
 	go.opentelemetry.io/contrib/instrumentation/net/http/otelhttp v0.54.0
@@ -28,7 +27,6 @@ require (
 	go.opentelemetry.io/otel/sdk v1.37.0
 	go.opentelemetry.io/otel/sdk/metric v1.37.0
 	go.opentelemetry.io/otel/trace v1.37.0
-	golang.org/x/crypto v0.40.0
 	golang.org/x/net v0.42.0
 )
 
@@ -53,6 +51,7 @@ require (
 	go.opentelemetry.io/auto/sdk v1.1.0 // indirect
 	go.opentelemetry.io/otel/metric v1.37.0 // indirect
 	go.uber.org/atomic v1.7.0 // indirect
+	golang.org/x/crypto v0.40.0 // indirect
 	golang.org/x/text v0.27.0 // indirect
 	google.golang.org/protobuf v1.36.6 // indirect
 )

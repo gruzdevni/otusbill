@@ -1,6 +1,9 @@
 package restapi
 
 import (
+	"errors"
+
+	"otusbill/apperr"
 	"otusbill/internal/models"
 	"otusbill/internal/restapi/operations/balance"
 	"otusbill/internal/restapi/operations/other"
@@ -32,6 +35,12 @@ func (h *Handler) ReduceBalance(params balance.PostUserBalanceReduceParams) midd
 
 	err := h.billSrv.ReduceBalance(ctx, *reqParams)
 	if err != nil {
+		if errors.Is(err, apperr.NotEnoughMoney) {
+			return balance.NewPostUserBalanceReduceForbidden().WithPayload(&models.DefaultStatusResponse{
+				Message: apperr.NotEnoughMoney.Error(), Code: "03",
+			})
+		}
+
 		return balance.NewPostUserBalanceReduceInternalServerError()
 	}
 

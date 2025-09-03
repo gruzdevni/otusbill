@@ -17,7 +17,7 @@ import (
 const PostUserBalanceReduceOKCode int = 200
 
 /*
-PostUserBalanceReduceOK Успешное создание пользователя
+PostUserBalanceReduceOK Успешное выполнение операции
 
 swagger:response postUserBalanceReduceOK
 */
@@ -50,6 +50,51 @@ func (o *PostUserBalanceReduceOK) SetPayload(payload *models.DefaultStatusRespon
 func (o *PostUserBalanceReduceOK) WriteResponse(rw http.ResponseWriter, producer runtime.Producer) {
 
 	rw.WriteHeader(200)
+	if o.Payload != nil {
+		payload := o.Payload
+		if err := producer.Produce(rw, payload); err != nil {
+			panic(err) // let the recovery middleware deal with this
+		}
+	}
+}
+
+// PostUserBalanceReduceForbiddenCode is the HTTP code returned for type PostUserBalanceReduceForbidden
+const PostUserBalanceReduceForbiddenCode int = 403
+
+/*
+PostUserBalanceReduceForbidden Клиентская ошибка
+
+swagger:response postUserBalanceReduceForbidden
+*/
+type PostUserBalanceReduceForbidden struct {
+
+	/*
+	  In: Body
+	*/
+	Payload *models.DefaultStatusResponse `json:"body,omitempty"`
+}
+
+// NewPostUserBalanceReduceForbidden creates PostUserBalanceReduceForbidden with default headers values
+func NewPostUserBalanceReduceForbidden() *PostUserBalanceReduceForbidden {
+
+	return &PostUserBalanceReduceForbidden{}
+}
+
+// WithPayload adds the payload to the post user balance reduce forbidden response
+func (o *PostUserBalanceReduceForbidden) WithPayload(payload *models.DefaultStatusResponse) *PostUserBalanceReduceForbidden {
+	o.Payload = payload
+	return o
+}
+
+// SetPayload sets the payload to the post user balance reduce forbidden response
+func (o *PostUserBalanceReduceForbidden) SetPayload(payload *models.DefaultStatusResponse) {
+	o.Payload = payload
+}
+
+// WriteResponse to the client
+func (o *PostUserBalanceReduceForbidden) WriteResponse(rw http.ResponseWriter, producer runtime.Producer) {
+
+	rw.WriteHeader(403)
 	if o.Payload != nil {
 		payload := o.Payload
 		if err := producer.Produce(rw, payload); err != nil {
